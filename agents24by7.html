@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0f1923">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Agents24by7">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Agents24by7</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:#060c12;font-family:'DM Sans',sans-serif;display:flex;align-items:center;justify-content:center}
+:root{
+  --base:#0f1923;--base2:#1c2d3d;
+  --cyan:#00d4ff;--cyan-dim:rgba(0,212,255,0.12);
+  --cyan-ring:rgba(0,212,255,0.18);--cyan-ring4:rgba(0,212,255,0.06);
+  --ice:#f4f8fb;--wa:#25D366;--wa-dk:#128C7E;
+  --muted:rgba(255,255,255,0.45);--green:#4ade80;
+}
+
+/* ── PHONE SHELL ── */
+.phone{
+  width:375px;min-height:100vh;max-height:812px;
+  border-radius:0;overflow:hidden;position:relative;
+  background:var(--base);
+  box-shadow:0 60px 140px rgba(0,0,0,0.8),0 0 0 1px rgba(0,212,255,0.12);
+}
+@media(min-height:860px){
+  .phone{min-height:812px;border-radius:48px}
+  body{padding:24px}
+}
+
+/* ── PAGE TRANSITIONS ── */
+.page{position:absolute;inset:0;display:flex;flex-direction:column;
+      transition:transform .55s cubic-bezier(.77,0,.18,1),opacity .5s ease}
+.page-active{transform:translateX(0);opacity:1}
+.page-exit{transform:translateX(-105%);opacity:0;pointer-events:none}
+.page-hidden{transform:translateX(105%);opacity:0;pointer-events:none}
+
+/* ── SHARED ── */
+.cyan-div{width:44px;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);margin:0 auto}
+.online-chip{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);border-radius:100px;padding:5px 12px}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:liveP 2s ease-in-out infinite}
+.chip-txt{font-size:11px;color:rgba(255,255,255,.65);font-weight:500}
+.hdr-brand{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;
+  color:var(--cyan);letter-spacing:-.3px}
+.back-link{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;
+  font-size:11px;letter-spacing:.04em;color:rgba(255,255,255,.28);
+  display:flex;align-items:center;gap:4px;padding:0;margin-bottom:8px;transition:color .2s}
+.back-link:hover{color:var(--cyan)}
+.curve-top{position:absolute;bottom:0;left:0;right:0;height:36px;
+  background:var(--ice);border-radius:22px 22px 0 0}
+.scroll-area{flex:1;overflow-y:auto;background:var(--ice);-webkit-overflow-scrolling:touch}
+.scroll-area::-webkit-scrollbar{display:none}
+
+/* ── ANIMATIONS ── */
+@keyframes liveP{0%,100%{box-shadow:0 0 0 3px rgba(74,222,128,.22)}50%{box-shadow:0 0 0 9px rgba(74,222,128,.06)}}
+@keyframes fdP{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:1;transform:scale(1.7)}}
+@keyframes iconIn{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:scale(1)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
+
+/* ── SPLASH ── */
+#pg-splash{
+  background:var(--base);align-items:center;justify-content:center;
+  text-align:center;padding:0 32px;overflow:hidden;
+}
+.ring{position:absolute;border-radius:50%;border:1px solid var(--cyan-ring)}
+.ring.r4{border-color:var(--cyan-ring4)}
+.fdot{position:absolute;border-radius:50%;background:var(--cyan);animation:fdP 3s ease-in-out infinite}
+.sp-icon{
+  width:88px;height:88px;border-radius:50%;
+  background:linear-gradient(145deg,#00d4ff,#0070a0);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 22px;position:relative;z-index:2;
+  box-shadow:0 0 0 12px rgba(0,212,255,.09),0 0 0 26px rgba(0,212,255,.04);
+  animation:iconIn .9s cubic-bezier(.34,1.56,.64,1) both;
+}
+.sp-eyebrow{font-size:10px;font-weight:600;letter-spacing:.28em;
+  color:rgba(0,212,255,.6);text-transform:uppercase;margin-bottom:10px;
+  position:relative;z-index:2;animation:fadeUp .6s .2s both}
+.sp-brand{font-family:'Playfair Display',serif;font-size:44px;font-weight:800;
+  color:#fff;line-height:1;margin-bottom:4px;
+  position:relative;z-index:2;animation:fadeUp .6s .32s both;letter-spacing:-1.5px}
+.sp-brand .g{color:var(--cyan)}
+.sp-brand .it{font-style:italic;color:var(--cyan)}
+.sp-sub{font-size:10.5px;font-weight:500;color:rgba(0,212,255,.45);letter-spacing:.2em;
+  text-transform:uppercase;margin-bottom:24px;
+  position:relative;z-index:2;animation:fadeUp .6s .42s both}
+.sp-divider{position:relative;z-index:2;animation:fadeUp .6s .5s both;margin-bottom:24px}
+.sp-tagline{position:relative;z-index:2;margin-bottom:42px;animation:fadeUp .6s .58s both}
+.sp-lead{font-size:16px;font-weight:600;color:#fff;margin-bottom:8px;letter-spacing:.01em}
+.sp-body{font-size:14px;color:var(--muted);line-height:1.8}
+.sp-body .hl{color:var(--cyan);font-weight:600}
+.sp-pill{
+  display:inline-flex;align-items:center;gap:10px;padding:14px 28px;
+  border:1.5px solid rgba(0,212,255,.4);border-radius:100px;
+  background:var(--cyan-dim);cursor:pointer;
+  position:relative;z-index:2;animation:fadeUp .6s .72s both;
+  transition:all .25s;font-family:inherit;
+}
+.sp-pill:hover{background:rgba(0,212,255,.2);transform:translateY(-2px);
+  box-shadow:0 14px 40px rgba(0,212,255,.2)}
+.sp-pill:active{transform:scale(.97)}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 0 3px rgba(74,222,128,.22);animation:liveP 2s ease-in-out infinite;flex-shrink:0}
+.pill-txt{font-size:14px;font-weight:600;color:#fff}
+.sp-domain{position:absolute;bottom:34px;font-size:11px;
+  color:rgba(255,255,255,.15);letter-spacing:.12em;z-index:2;animation:fadeUp .6s .9s both}
+
+/* ── CATEGORIES ── */
+#pg-cats{background:var(--ice)}
+.cat-hdr{background:var(--base);padding:48px 22px 52px;flex-shrink:0;position:relative}
+.hdr-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.cat-title{font-family:'Playfair Display',serif;font-size:27px;font-weight:700;
+  color:#fff;line-height:1.2;margin-bottom:7px}
+.cat-title .g{color:var(--cyan)}
+.cat-hint{font-size:12px;color:rgba(255,255,255,.38);line-height:1.6}
+.agent-banner{
+  background:#fff;border:1px solid rgba(0,212,255,.25);border-radius:16px;
+  padding:14px;display:flex;align-items:center;gap:12px;margin-bottom:14px;
+  box-shadow:0 2px 14px rgba(15,25,35,.07);
+}
+.ava-stack{display:flex}
+.ava{width:32px;height:32px;border-radius:50%;border:2.5px solid #fff;margin-left:-9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;color:#fff}
+.ava:first-child{margin-left:0}
+.ava-a{background:#1c2d3d}.ava-b{background:var(--base)}.ava-c{background:var(--cyan);color:var(--base)}
+.banner-title{font-size:12.5px;font-weight:600;color:var(--base)}
+.banner-desc{font-size:11px;color:rgba(15,25,35,.45)}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+.cat-card{
+  background:#fff;border:1px solid rgba(15,25,35,.08);border-radius:16px;
+  padding:14px 12px;cursor:pointer;text-align:left;position:relative;
+  transition:all .2s;box-shadow:0 1px 6px rgba(15,25,35,.04);font-family:inherit;
+}
+.cat-card:hover{border-color:rgba(0,212,255,.4);
+  box-shadow:0 0 0 2px rgba(0,212,255,.12),0 4px 14px rgba(0,212,255,.1)}
+.cat-card.sel{border-color:rgba(0,212,255,.55);background:linear-gradient(135deg,#f0fbff,#fff);
+  box-shadow:0 0 0 3px rgba(0,212,255,.15),0 6px 20px rgba(0,212,255,.12)}
+.cat-em{font-size:28px;display:block;margin-bottom:10px;line-height:1;
+  transition:transform .3s;display:inline-block}
+.cat-card:hover .cat-em,.cat-card.sel .cat-em{transform:scale(1.12) rotate(-4deg)}
+.cat-nm{font-size:12.5px;font-weight:600;color:#0f1c2e;line-height:1.3}
+.cat-card.sel .cat-nm{color:#007a99}
+.card-arr{position:absolute;bottom:10px;right:10px;width:20px;height:20px;
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  opacity:0;transition:all .2s;font-size:10px}
+.cat-card:hover .card-arr,.cat-card.sel .card-arr{opacity:1}
+.cat-card.sel .card-arr{background:var(--cyan);color:var(--base)}
+.cat-card:not(.sel):hover .card-arr{background:var(--base);color:var(--cyan)}
+.site-link{margin:18px 0 6px;text-align:center;font-size:11px;color:#9ca3af}
+.site-link a{color:#0088aa;text-decoration:none;font-weight:500}
+.bottom-bar{background:#fff;border-top:1px solid rgba(15,25,35,.08);
+  padding:14px 18px 30px;flex-shrink:0}
+.cont-btn{
+  width:100%;padding:15px;background:var(--base);color:var(--cyan);
+  border:1.5px solid rgba(0,212,255,.3);border-radius:14px;
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:700;
+  cursor:pointer;opacity:.28;pointer-events:none;
+  transition:all .3s;letter-spacing:.02em;
+}
+.cont-btn.on{opacity:1;pointer-events:auto;
+  box-shadow:0 8px 28px rgba(0,212,255,.2),0 0 0 1px rgba(0,212,255,.15)}
+.cont-btn.on:hover{transform:translateY(-1px)}
+.cont-btn.on:active{transform:scale(.98)}
+
+/* ── REQUEST FORM ── */
+.req-hdr{background:var(--base);padding:48px 22px 24px;flex-shrink:0;position:relative}
+.req-cat-pill{display:flex;align-items:center;gap:12px;border-radius:14px;
+  padding:11px 16px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(0,212,255,.2);margin-top:4px}
+.req-cat-icon{font-size:24px;line-height:1}
+.req-cat-nm{font-size:14px;font-weight:600;color:#fff}
+.req-cat-sub{font-size:11px;color:rgba(0,212,255,.55);margin-top:2px}
+.form-inner{padding:20px 20px 32px;display:flex;flex-direction:column;gap:16px}
+.flabel{font-size:12px;font-weight:600;color:var(--base);
+  display:flex;align-items:center;gap:3px;margin-bottom:6px}
+.req-mark{color:var(--cyan)}
+.en-field{
+  width:100%;padding:0 14px;height:46px;background:#fff;
+  border:1px solid rgba(15,25,35,.12);border-radius:12px;
+  font-family:'DM Sans',sans-serif;font-size:14px;color:var(--base);
+  outline:none;transition:border-color .2s,box-shadow .2s;
+}
+.en-field:focus{border-color:rgba(0,212,255,.6);box-shadow:0 0 0 3px rgba(0,212,255,.1)}
+.en-field.err{border-color:rgba(220,38,38,.5);background:rgba(220,38,38,.03)}
+textarea.en-field{height:auto;padding:12px 14px;resize:none;line-height:1.6}
+.err-txt{font-size:11px;color:#dc2626;margin-top:4px;display:none}
+.err-txt.show{display:block}
+.char-ct{font-size:11px;color:rgba(15,25,35,.35);text-align:right}
+.preview-box{background:#fff;border-radius:12px;padding:12px 14px;
+  border:1px solid rgba(0,212,255,.25);box-shadow:0 2px 10px rgba(15,25,35,.05);display:none}
+.preview-lbl{font-size:9px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.5px;color:rgba(15,25,35,.35);margin-bottom:7px}
+.preview-txt{font-size:11.5px;line-height:1.8;color:rgba(15,25,35,.6);
+  white-space:pre-line;font-family:monospace}
+.wa-note{display:flex;align-items:flex-start;gap:10px;border-radius:12px;
+  padding:11px 14px;background:rgba(37,211,102,.06);border:1px solid rgba(37,211,102,.2)}
+.wa-ball{width:22px;height:22px;border-radius:50%;background:var(--wa);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.wa-note-txt{font-size:12px;color:#166534;line-height:1.55}
+.wa-btn{
+  width:100%;padding:15px;background:var(--wa);color:#fff;border:none;border-radius:14px;
+  font-family:'Playfair Display',serif;font-size:16px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  transition:background .2s,transform .2s;
+}
+.wa-btn:hover{background:var(--wa-dk);transform:translateY(-1px)}
+.wa-btn:active{transform:scale(.98)}
+.wa-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+
+/* ── SUCCESS ── */
+.suc-top{
+  background:var(--base);flex-shrink:0;padding:52px 24px 44px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;position:relative;overflow:hidden;
+}
+.suc-ring{position:absolute;border-radius:50%;border:1px solid rgba(0,212,255,.1)}
+.wa-circle{
+  width:76px;height:76px;border-radius:50%;background:var(--wa);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:2;margin-bottom:16px;
+  box-shadow:0 0 0 12px rgba(37,211,102,.08),0 20px 50px rgba(37,211,102,.2);
+  animation:popIn .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+.suc-title{font-family:'Playfair Display',serif;font-size:24px;font-weight:700;
+  color:#fff;margin-bottom:4px;position:relative;z-index:2}
+.suc-saved{font-size:12px;color:rgba(0,212,255,.55);position:relative;z-index:2}
+.suc-sub{font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;
+  position:relative;z-index:2;max-width:230px;margin-top:4px}
+.suc-inner{padding:18px 18px 28px;display:flex;flex-direction:column;gap:12px}
+.steps-card{background:#fff;border-radius:18px;padding:16px;
+  border:1px solid rgba(0,212,255,.2);box-shadow:0 2px 14px rgba(15,25,35,.05)}
+.steps-lbl{font-size:9px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.5px;color:rgba(15,25,35,.35);margin-bottom:12px}
+.step-row{display:flex;align-items:flex-start;gap:12px;padding:5px 0}
+.step-ico{font-size:15px;flex-shrink:0;margin-top:1px}
+.step-txt{font-size:13px;color:#374151;line-height:1.45}
+.wa-again{
+  width:100%;padding:15px;background:var(--wa);color:#fff;border:none;border-radius:14px;
+  font-family:'Playfair Display',serif;font-size:15px;font-weight:700;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:9px;transition:background .2s;
+}
+.wa-again:hover{background:var(--wa-dk)}
+.new-req{
+  width:100%;padding:14px;border-radius:14px;cursor:pointer;
+  background:#fff;border:1px solid rgba(15,25,35,.12);
+  color:var(--base);font-family:'DM Sans',sans-serif;font-size:14px;
+  font-weight:600;transition:background .2s;
+}
+.new-req:hover{background:var(--ice)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;bottom:32px;left:50%;
+  transform:translateX(-50%) translateY(14px);
+  background:var(--base);color:#fff;padding:11px 22px;border-radius:40px;
+  font-size:13px;font-weight:500;border:1px solid var(--cyan);
+  opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);
+  white-space:nowrap;z-index:999;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="phone">
+
+  <!-- ════════════ SPLASH ════════════ -->
+  <div class="page page-active" id="pg-splash">
+
+    <!-- Rings -->
+    <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none">
+      <div class="ring"   style="width:230px;height:230px"></div>
+      <div class="ring"   style="width:360px;height:360px"></div>
+      <div class="ring"   style="width:510px;height:510px"></div>
+      <div class="ring r4" style="width:680px;height:680px"></div>
+    </div>
+
+    <!-- Floating dots -->
+    <div class="fdot" style="width:7px;height:7px;top:17%;left:12%;animation-delay:0s"></div>
+    <div class="fdot" style="width:5px;height:5px;top:20%;right:16%;animation-delay:1s"></div>
+    <div class="fdot" style="width:8px;height:8px;bottom:26%;right:11%;animation-delay:1.8s"></div>
+    <div class="fdot" style="width:5px;height:5px;bottom:20%;left:15%;animation-delay:2.6s"></div>
+    <div class="fdot" style="width:4px;height:4px;top:40%;left:7%;animation-delay:1.3s;opacity:.3"></div>
+
+    <!-- Icon -->
+    <div class="sp-icon">
+      <svg width="44" height="44" viewBox="0 0 48 48" fill="#0f1923">
+        <circle cx="24" cy="16" r="9"/>
+        <path d="M7 44c0-9.5 7.6-16 17-16s17 6.5 17 16H7z"/>
+      </svg>
+    </div>
+
+    <p class="sp-eyebrow">Your Requests. Our Agents.</p>
+
+    <h1 class="sp-brand">
+      <span class="g">Agents</span>24<span class="it">by</span>7
+    </h1>
+
+    <p class="sp-sub">Curated Provider Network</p>
+
+    <div class="cyan-div sp-divider"></div>
+
+    <div class="sp-tagline">
+      <p class="sp-lead">Tell us what you need.</p>
+      <p class="sp-body">
+        We get it done through our<br>
+        <span class="hl">curated service Providers</span><br>
+        — instantly.
+      </p>
+    </div>
+
+    <button class="sp-pill" onclick="goTo('cats')">
+      <span class="live-dot"></span>
+      <span class="pill-txt">Agents online now</span>
+    </button>
+
+    <span class="sp-domain">agents24by7.com</span>
+  </div>
+
+  <!-- ════════════ CATEGORIES ════════════ -->
+  <div class="page page-hidden" id="pg-cats">
+    <div class="cat-hdr">
+      <div class="hdr-row">
+        <div>
+          <button class="back-link" onclick="goTo('splash')">← Back</button>
+          <div class="hdr-brand">Agents24<em style="font-style:italic">by</em>7</div>
+        </div>
+        <div class="online-chip">
+          <span class="chip-dot"></span>
+          <span class="chip-txt">Agents online</span>
+        </div>
+      </div>
+      <div class="cat-title">How can we <span class="g">help</span><br>you today?</div>
+      <div class="cat-hint">Pick a category — we get it done through<br>our curated service Providers, instantly.</div>
+      <div class="curve-top"></div>
+    </div>
+
+    <div class="scroll-area">
+      <div style="padding:22px 16px 28px">
+        <!-- Agent banner -->
+        <div class="agent-banner">
+          <div class="ava-stack">
+            <div class="ava ava-a">RS</div>
+            <div class="ava ava-b">MK</div>
+            <div class="ava ava-c">JP</div>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div class="banner-title">Real agents, curated providers</div>
+            <div class="banner-desc">We get your request done — instantly.</div>
+          </div>
+          <span style="font-size:20px">🤝</span>
+        </div>
+
+        <!-- Grid -->
+        <div class="cat-grid" id="cat-grid"></div>
+
+        <div class="site-link">
+          <a href="https://agents24by7.com" target="_blank">agents24by7.com</a>
+          &nbsp;·&nbsp;Curated Provider Network
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-bar">
+      <button class="cont-btn" id="cont-btn" onclick="goContinue()">
+        Connect with an Agent
+      </button>
+    </div>
+  </div>
+
+  <!-- ════════════ REQUEST FORM ════════════ -->
+  <div class="page page-hidden" id="pg-req">
+    <div class="req-hdr">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px">
+        <div>
+          <button class="back-link" onclick="goTo('cats')">← Back</button>
+          <div class="hdr-brand">Agents24<em style="font-style:italic">by</em>7</div>
+        </div>
+        <div class="online-chip">
+          <span class="chip-dot"></span>
+          <span class="chip-txt">Agents online</span>
+        </div>
+      </div>
+      <div class="req-cat-pill">
+        <span class="req-cat-icon" id="req-icon">✈️</span>
+        <div>
+          <div class="req-cat-nm" id="req-cat-name">Travel &amp; Flights</div>
+          <div class="req-cat-sub">Agent replies on WhatsApp</div>
+        </div>
+      </div>
+      <div class="curve-top"></div>
+    </div>
+
+    <div class="scroll-area">
+      <div class="form-inner">
+
+        <!-- Name -->
+        <div>
+          <div class="flabel">Your name <span class="req-mark">*</span></div>
+          <input class="en-field" id="f-name" type="text"
+                 placeholder="Ahmed Al Rashid" oninput="onType()" onblur="vName()">
+          <div class="err-txt" id="err-name">Please enter your name</div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <div class="flabel">Describe what you need <span class="req-mark">*</span></div>
+          <textarea class="en-field" id="f-desc" rows="5"
+                    oninput="onType()" onblur="vDesc()"></textarea>
+          <div style="display:flex;justify-content:space-between;margin-top:4px">
+            <div class="err-txt" id="err-desc">Please describe your request</div>
+            <span class="char-ct" id="char-ct" style="margin-left:auto">0 / 500</span>
+          </div>
+        </div>
+
+        <!-- Live preview -->
+        <div class="preview-box" id="preview-box">
+          <div class="preview-lbl">Message preview</div>
+          <div class="preview-txt" id="preview-txt"></div>
+        </div>
+
+        <!-- WA note -->
+        <div class="wa-note">
+          <div class="wa-ball">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="white">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </div>
+          <p class="wa-note-txt">WhatsApp opens with your message ready. Your agent will reply shortly.</p>
+        </div>
+
+        <!-- Submit -->
+        <button class="wa-btn" id="wa-go-btn" onclick="submitReq()" disabled>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          <span id="wa-btn-lbl">Open WhatsApp</span>
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════ SUCCESS ════════════ -->
+  <div class="page page-hidden" id="pg-suc">
+    <div class="suc-top">
+      <div class="suc-ring" style="width:130px;height:130px;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+      <div class="suc-ring" style="width:210px;height:210px;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+      <div class="suc-ring" style="width:300px;height:300px;top:50%;left:50%;transform:translate(-50%,-50%)"></div>
+
+      <div class="wa-circle">
+        <svg width="38" height="38" viewBox="0 0 24 24" fill="white">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+      </div>
+
+      <h1 class="suc-title">WhatsApp opened!</h1>
+      <p class="suc-saved">Request saved ✓</p>
+      <div class="cyan-div" style="margin:14px auto;position:relative;z-index:2"></div>
+      <p class="suc-sub">Your message is pre-filled. Hit send — your agent will reply shortly.</p>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:36px;
+                  background:var(--ice);border-radius:22px 22px 0 0"></div>
+    </div>
+
+    <div class="scroll-area">
+      <div class="suc-inner">
+        <div class="steps-card">
+          <div class="steps-lbl">What happens next</div>
+          <div class="step-row">
+            <span class="step-ico">✅</span>
+            <span class="step-txt">Request saved and categorised</span>
+          </div>
+          <div class="step-row">
+            <span class="step-ico">👤</span>
+            <span class="step-txt">Agent assigned in Respond.io</span>
+          </div>
+          <div class="step-row">
+            <span class="step-ico">💬</span>
+            <span class="step-txt">Agent replies on your WhatsApp</span>
+          </div>
+          <div class="step-row">
+            <span class="step-ico">📱</span>
+            <span class="step-txt">Your number captured automatically</span>
+          </div>
+        </div>
+
+        <button class="wa-again" id="wa-again-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+          </svg>
+          Open WhatsApp again
+        </button>
+
+        <button class="new-req" onclick="resetApp()">Submit another request</button>
+
+        <div class="site-link">
+          <a href="https://agents24by7.com" target="_blank">agents24by7.com</a>
+          &nbsp;·&nbsp;Curated Provider Network
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+const WA_NUMBER = '971529307089'   // +971 52 930 7089
+const API_URL   = 'https://your-dotnet-api.com'  // replace with your .NET backend
+
+// ── Categories ────────────────────────────────────────────────────────────
+const CATS = [
+  { e:'✈️', n:'Travel & Flights',   p:'E.g. Return flights Dubai to London, 2 adults, Dec 20–27, business class...' },
+  { e:'🛂', n:'Visa & Immigration', p:'E.g. My UAE visa expires Jan 5, need urgent renewal, all documents ready...' },
+  { e:'🏠', n:'Accommodation',      p:'E.g. Furnished 1BR in Dubai Marina, 3 months from Jan 1, budget AED 8k/mo...' },
+  { e:'🚗', n:'Car & Transport',    p:'E.g. Toyota Camry AC not working, need a reliable garage in Deira area...' },
+  { e:'🎓', n:'Education',          p:'E.g. Enroll my son in British curriculum school Abu Dhabi, Grade 5...' },
+  { e:'🛒', n:'Shopping',           p:'E.g. 50 custom polo shirts with company logo for corporate event...' },
+  { e:'💊', n:'Medical',            p:'E.g. Orthopedic specialist for knee pain, this week in Dubai...' },
+  { e:'⚖️', n:'Legal',              p:'E.g. Bilingual consultant for tenancy contract dispute...' },
+  { e:'💰', n:'Finance',            p:'E.g. Help setting up a UAE business bank account...' },
+  { e:'🔧', n:'Home Services',      p:'E.g. AC unit not cooling in JVC apartment, need technician ASAP...' },
+  { e:'💼', n:'Business Setup',     p:'E.g. Set up mainland LLC in Dubai, trading license...' },
+  { e:'📦', n:'Other',              p:"Describe what you need and we'll find the right solution..." },
+]
+
+// ── State ─────────────────────────────────────────────────────────────────
+let selCat  = null
+let curPage = 'splash'
+let waMsg   = ''
+
+// ── Navigation ────────────────────────────────────────────────────────────
+function goTo(next) {
+  const cur  = document.getElementById('pg-' + curPage)
+  const nxt  = document.getElementById('pg-' + next)
+  if (!cur || !nxt) return
+  cur.classList.remove('page-active')
+  cur.classList.add('page-exit')
+  nxt.classList.remove('page-hidden', 'page-exit')
+  nxt.classList.add('page-active')
+  setTimeout(() => cur.classList.add('page-hidden'), 600)
+  curPage = next
+}
+
+// ── Build category grid ───────────────────────────────────────────────────
+const grid = document.getElementById('cat-grid')
+CATS.forEach((c, i) => {
+  const el = document.createElement('button')
+  el.className = 'cat-card'
+  el.innerHTML = `<span class="cat-em">${c.e}</span>
+                  <div class="cat-nm">${c.n}</div>
+                  <div class="card-arr">→</div>`
+  el.onclick = () => {
+    document.querySelectorAll('.cat-card').forEach(x => x.classList.remove('sel'))
+    el.classList.add('sel')
+    selCat = i
+    document.getElementById('cont-btn').classList.add('on')
+  }
+  grid.appendChild(el)
+})
+
+// ── Continue from categories ──────────────────────────────────────────────
+function goContinue() {
+  if (selCat === null) return
+  const cat = CATS[selCat]
+  document.getElementById('req-icon').textContent     = cat.e
+  document.getElementById('req-cat-name').textContent = cat.n
+  document.getElementById('f-desc').placeholder       = cat.p
+  document.getElementById('f-name').value = ''
+  document.getElementById('f-desc').value = ''
+  document.getElementById('preview-box').style.display = 'none'
+  document.getElementById('wa-go-btn').disabled        = true
+  document.getElementById('char-ct').textContent       = '0 / 500'
+  hideErr('name'); hideErr('desc')
+  goTo('req')
+}
+
+// ── Validation helpers ────────────────────────────────────────────────────
+function showErr(f) {
+  document.getElementById('f-' + f).classList.add('err')
+  document.getElementById('err-' + f).classList.add('show')
+}
+function hideErr(f) {
+  document.getElementById('f-' + f).classList.remove('err')
+  document.getElementById('err-' + f).classList.remove('show')
+}
+function vName() {
+  const v = document.getElementById('f-name').value.trim()
+  v ? hideErr('name') : showErr('name')
+  return !!v
+}
+function vDesc() {
+  const v = document.getElementById('f-desc').value.trim()
+  v ? hideErr('desc') : showErr('desc')
+  return !!v
+}
+
+// ── Live preview ──────────────────────────────────────────────────────────
+function onType() {
+  const name = document.getElementById('f-name').value.trim()
+  const desc = document.getElementById('f-desc').value
+  document.getElementById('char-ct').textContent = desc.length + ' / 500'
+  if (name) hideErr('name')
+  if (desc.trim()) hideErr('desc')
+  const ready = name.length > 0 && desc.trim().length > 0
+  document.getElementById('wa-go-btn').disabled = !ready
+  if (ready && selCat !== null) {
+    const cat = CATS[selCat]
+    waMsg = `Hi! I'm ${name}.\n\n*Category:* ${cat.e} ${cat.n}\n\n*Request:*\n${desc.trim()}`
+    document.getElementById('preview-txt').textContent = waMsg
+    document.getElementById('preview-box').style.display = 'block'
+  } else {
+    document.getElementById('preview-box').style.display = 'none'
+  }
+}
+
+// ── Submit ────────────────────────────────────────────────────────────────
+async function submitReq() {
+  const nameOk = vName()
+  const descOk = vDesc()
+  if (!nameOk || !descOk) return
+
+  const name = document.getElementById('f-name').value.trim()
+  const desc = document.getElementById('f-desc').value.trim()
+  const cat  = CATS[selCat]
+  waMsg = `Hi! I'm ${name}.\n\n*Category:* ${cat.e} ${cat.n}\n\n*Request:*\n${desc}`
+
+  // 1. Open WhatsApp instantly
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank')
+
+  // 2. Wire up "Open again" button
+  document.getElementById('wa-again-btn').onclick = () =>
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(waMsg)}`, '_blank')
+
+  // 3. Show loading state
+  const lbl = document.getElementById('wa-btn-lbl')
+  lbl.textContent = 'Opening…'
+
+  // 4. Save to backend + Respond.io (fire and forget)
+  try {
+    await fetch(`${API_URL}/api/requests`, {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        phone:        null,
+        category:     cat.n,
+        categoryIcon: cat.e,
+        description:  desc,
+        waMessage:    waMsg,
+      }),
+    })
+  } catch {
+    // silent — WA already opened
+  } finally {
+    lbl.textContent = 'Open WhatsApp'
+  }
+
+  // 5. Navigate to success
+  setTimeout(() => {
+    goTo('suc')
+    showToast('Request saved ✓')
+  }, 500)
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────
+function resetApp() {
+  selCat = null
+  document.querySelectorAll('.cat-card').forEach(x => x.classList.remove('sel'))
+  document.getElementById('cont-btn').classList.remove('on')
+  goTo('splash')
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast')
+  t.textContent = msg
+  t.classList.add('show')
+  setTimeout(() => t.classList.remove('show'), 3000)
+}
+</script>
+</body>
+</html>
